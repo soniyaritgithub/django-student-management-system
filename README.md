@@ -18,3 +18,27 @@ A professional Student Management System built using Django, MySQL, Bootstrap an
 - MySQL
 - Bootstrap
 - Django REST Framework
+
+# 📸 Project Screenshots
+
+## Home Page
+
+![Home Page](screenshots/home.png)
+
+---
+
+## Login Page
+
+![Login Page](screenshots/login.png)
+
+---
+
+## Signup Page
+
+![Signup Page](screenshots/signup.png)
+
+---
+
+## REST API
+
+![API](screenshots/api.png)
