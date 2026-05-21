@@ -23,7 +23,7 @@ A professional Student Management System built using Django, MySQL, Bootstrap an
 
 ## Home Page
 
-![Home Page](screenshots/home.png)
+![Home Page](screenshots/Home.png)
 
 ---
 
