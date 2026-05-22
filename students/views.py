@@ -1,35 +1,34 @@
 from django.shortcuts import render, redirect
+
 from .models import Student
+
 from .forms import StudentForm
+
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect
+
+from django.contrib.auth import logout
+
 from rest_framework.decorators import api_view
+
 from rest_framework.response import Response
-from .serializers import StudentSerializer
+
+import pandas as pd
+
+from django.http import HttpResponse
+
+from reportlab.pdfgen import canvas
 
 
+# HOME PAGE
 
 def home(request):
 
-    # Search Feature
-
-    search = request.GET.get('search')
-
-    if search:
-        students = Student.objects.filter(
-            name__icontains=search
-        )
-
-    else:
-        students = Student.objects.all()
-
-    # Add Student Form
-
-    form = StudentForm()
-
     if request.method == 'POST':
 
-        form = StudentForm(request.POST)
+        form = StudentForm(
+            request.POST,
+            request.FILES
+        )
 
         if form.is_valid():
 
@@ -37,22 +36,63 @@ def home(request):
 
             return redirect('/')
 
-    # Send data to HTML
+    else:
 
-    context = {
+        form = StudentForm()
 
-        'students': students,
+    students = Student.objects.all()
 
-        'form': form
+    return render(
 
-    }
+        request,
 
-    return render(request,
-                  'students/index.html',
-                  context)
+        'students/index.html',
+
+        {
+
+            'students': students,
+
+            'form': form
+
+        }
+
+    )
 
 
-# Delete Student
+# SIGNUP PAGE
+
+def signup(request):
+
+    if request.method == 'POST':
+
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+
+            form.save()
+
+            return redirect('/accounts/login/')
+
+    else:
+
+        form = UserCreationForm()
+
+    return render(
+
+        request,
+
+        'students/signup.html',
+
+        {
+
+            'form': form
+
+        }
+
+    )
+
+
+# DELETE STUDENT
 
 def delete_student(request, id):
 
@@ -61,29 +101,223 @@ def delete_student(request, id):
     student.delete()
 
     return redirect('/')
-def signup(request):
 
-    if request.method == 'POST':
 
-        form = UserCreationForm(request.POST)
+# LOGOUT
 
-        if form.is_valid():
-            form.save()
-            return redirect('/accounts/login')
+def logout_view(request):
 
-    else:
-        form = UserCreationForm()
+    logout(request)
 
-    return render(request, 'students/signup.html', {'form': form})
-@api_view(['GET'])
+    return redirect('/accounts/login/')
 
-def student_api(request):
+
+# STUDENT PROFILE PAGE
+
+def profile(request, id):
+
+    student = Student.objects.get(id=id)
+
+    return render(
+
+        request,
+
+        'students/profile.html',
+
+        {
+
+            'student': student
+
+        }
+
+    )
+
+
+# REST API
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+
+def student_api(request, id=None):
+
+    # GET ALL STUDENTS
+
+    if request.method == 'GET':
+
+        students = Student.objects.all()
+
+        data = []
+
+        for student in students:
+
+            data.append({
+
+                'id': student.id,
+
+                'name': student.name,
+
+                'email': student.email,
+
+                'course': student.course,
+                'attendance': student.attendance,
+
+                'image': student.image.url
+                if student.image else None,
+
+            })
+
+        return Response(data)
+
+    # ADD STUDENT
+
+    elif request.method == 'POST':
+
+        Student.objects.create(
+
+            name=request.data.get('name'),
+
+            email=request.data.get('email'),
+
+            course=request.data.get('course'),
+
+            image=request.FILES.get('image')
+
+        )
+
+        return Response({
+
+            'message':
+            'Student Added Successfully'
+
+        })
+
+    # UPDATE STUDENT
+
+    elif request.method == 'PUT':
+
+        try:
+
+            student = Student.objects.get(id=id)
+
+            student.name = request.data.get('name')
+
+            student.email = request.data.get('email')
+
+            student.course = request.data.get('course')
+            student.attendance = request.data.get('attendance')
+
+            student.save()
+
+            return Response({
+
+                'message':
+                'Student Updated Successfully'
+
+            })
+
+        except:
+
+            return Response({
+
+                'error':
+                'Student Not Found'
+
+            })
+
+    # DELETE STUDENT
+
+    elif request.method == 'DELETE':
+
+        try:
+
+            student = Student.objects.get(id=id)
+
+            student.delete()
+
+            return Response({
+
+                'message':
+                'Student Deleted Successfully'
+
+            })
+
+        except:
+
+            return Response({
+
+                'error':
+                'Student Not Found'
+
+            })
+
+
+# EXPORT EXCEL
+
+def export_excel(request):
+
+    students = Student.objects.all().values(
+
+        'id',
+
+        'name',
+
+        'email',
+
+        'course'
+
+    )
+
+    df = pd.DataFrame(students)
+
+    response = HttpResponse(
+
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
+    )
+
+    response['Content-Disposition'] = \
+        'attachment; filename=students.xlsx'
+
+    df.to_excel(response, index=False)
+
+    return response
+
+
+# EXPORT PDF
+
+def export_pdf(request):
+
+    response = HttpResponse(
+        content_type='application/pdf'
+    )
+
+    response['Content-Disposition'] = \
+        'attachment; filename=students.pdf'
+
+    p = canvas.Canvas(response)
 
     students = Student.objects.all()
 
-    serializer = StudentSerializer(
-        students,
-        many=True
-    )
+    y = 800
 
-    return Response(serializer.data)
+    p.drawString(200, 820, "Student List")
+
+    for student in students:
+
+        p.drawString(
+
+            100,
+
+            y,
+
+            f"{student.id} | "
+            f"{student.name} | "
+            f"{student.email} | "
+            f"{student.course}"
+
+        )
+
+        y -= 30
+
+    p.save()
+
+    return response
