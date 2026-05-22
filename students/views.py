@@ -135,7 +135,7 @@ def profile(request, id):
 
 # REST API
 
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 
 def student_api(request, id=None):
 
@@ -158,6 +158,7 @@ def student_api(request, id=None):
                 'email': student.email,
 
                 'course': student.course,
+
                 'attendance': student.attendance,
 
                 'image': student.image.url
@@ -192,18 +193,27 @@ def student_api(request, id=None):
 
     # UPDATE STUDENT
 
-    elif request.method == 'PUT':
+    elif request.method == 'PUT' or request.method == 'PATCH':
 
         try:
 
             student = Student.objects.get(id=id)
 
-            student.name = request.data.get('name')
+            if request.data.get('name'):
 
-            student.email = request.data.get('email')
+                student.name = request.data.get('name')
 
-            student.course = request.data.get('course')
-            student.attendance = request.data.get('attendance')
+            if request.data.get('email'):
+
+                student.email = request.data.get('email')
+
+            if request.data.get('course'):
+
+                student.course = request.data.get('course')
+
+            if request.data.get('attendance'):
+
+                student.attendance = request.data.get('attendance')
 
             student.save()
 
