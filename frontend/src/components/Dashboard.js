@@ -117,6 +117,11 @@ function Dashboard() {
   const [editCourse, setEditCourse]
     = useState("");
 
+  // Backend URL
+
+  const API =
+    "https://django-student-management-system-r6hl.onrender.com";
+
   // Fetch Students
 
   useEffect(() => {
@@ -128,7 +133,7 @@ function Dashboard() {
     }
 
     axios
-      .get("http://127.0.0.1:8000/api/")
+      .get(`${API}/api/`)
       .then((response) => {
 
         setStudents(response.data);
@@ -163,7 +168,7 @@ function Dashboard() {
 
       await axios.post(
 
-        "http://127.0.0.1:8000/api/",
+        `${API}/api/`,
 
         formData,
 
@@ -204,7 +209,7 @@ function Dashboard() {
 
       await axios.put(
 
-        `http://127.0.0.1:8000/api/${editId}/`,
+        `${API}/api/${editId}/`,
 
         {
 
@@ -240,7 +245,7 @@ function Dashboard() {
 
       await axios.delete(
 
-        `http://127.0.0.1:8000/api/${id}/`
+        `${API}/api/${id}/`
 
       );
 
@@ -269,7 +274,7 @@ function Dashboard() {
 
       await axios.put(
 
-        `http://127.0.0.1:8000/api/${id}/`,
+        `${API}/api/${id}/`,
 
         {
 
@@ -378,66 +383,71 @@ function Dashboard() {
       );
 
     }
-else if (
 
-  question.toLowerCase().includes(
-    "hi"
-  )
+    else if (
 
-) {
+      question.toLowerCase().includes(
+        "hi"
+      )
 
-  setAnswer(
+    ) {
 
-    "👋 Hello! How can I help you?"
+      setAnswer(
 
-  );
+        "👋 Hello! How can I help you?"
 
-}
-else if (
+      );
 
-  question.toLowerCase().includes(
-    "hey"
-  )
+    }
 
-) {
+    else if (
 
-  setAnswer(
+      question.toLowerCase().includes(
+        "hey"
+      )
 
-    "👋 Hello! How can I help you?"
+    ) {
 
-  );
+      setAnswer(
 
-}
-else if (
+        "👋 Hello! How can I help you?"
 
-  question.toLowerCase().includes(
-    "how are you"
-  )
+      );
 
-) {
+    }
 
-  setAnswer(
+    else if (
 
-    "I’m doing great, how about you? 🙂"
+      question.toLowerCase().includes(
+        "how are you"
+      )
 
-  );
+    ) {
 
-}
-else if (
+      setAnswer(
 
-  question.toLowerCase().includes(
-    "hello"
-  )
+        "I’m doing great, how about you? 🙂"
 
-) {
+      );
 
-  setAnswer(
+    }
 
-    "👋 Hello! How can I help you?"
+    else if (
 
-  );
+      question.toLowerCase().includes(
+        "hello"
+      )
 
-}
+    ) {
+
+      setAnswer(
+
+        "👋 Hello! How can I help you?"
+
+      );
+
+    }
+
     else {
 
       setAnswer(
@@ -883,7 +893,7 @@ else if (
 
               <a
 
-                href="http://127.0.0.1:8000/export-excel/"
+                href={`${API}/export-excel/`}
 
                 className="btn btn-success me-3"
 
@@ -895,7 +905,7 @@ else if (
 
               <a
 
-                href="http://127.0.0.1:8000/export-pdf/"
+                href={`${API}/export-pdf/`}
 
                 className="btn btn-danger"
 
@@ -963,7 +973,7 @@ else if (
 
                           <img
 
-                            src={`http://127.0.0.1:8000${student.image}`}
+                            src={`${API}${student.image}`}
 
                             alt="student"
 
