@@ -1,3 +1,5 @@
+
+
 import {
 
   FaUserGraduate,
@@ -55,6 +57,7 @@ ChartJS.register(
   Legend
 
 );
+
 
 function Dashboard() {
 
@@ -198,15 +201,17 @@ function Dashboard() {
 
  // Edit Student
 
+// Edit Student
+
 const editStudent = async (e) => {
 
   e.preventDefault();
 
   try {
 
-    await axios.patch(
+    const response = await axios.patch(
 
-      `https://django-student-management-system-r6hl.onrender.com/api/${editId}/`,
+      `http://127.0.0.1:8000/api/${editId}/`,
 
       {
 
@@ -220,9 +225,27 @@ const editStudent = async (e) => {
 
     );
 
+    console.log(response.data);
+
+    // Refetch latest students
+
+    const updatedStudents = await axios.get(
+      "http://127.0.0.1:8000/api/"
+    );
+
+    setStudents(updatedStudents.data);
+
     alert("✅ Student Updated Successfully");
 
-    window.location.reload();
+    // Close Edit Form
+
+    setEditId(null);
+
+    setEditName("");
+
+    setEditEmail("");
+
+    setEditCourse("");
 
   }
 
