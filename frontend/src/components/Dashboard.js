@@ -117,11 +117,6 @@ function Dashboard() {
   const [editCourse, setEditCourse]
     = useState("");
 
-  // Backend URL
-
-  const API =
-    "https://django-student-management-system-r6hl.onrender.com";
-
   // Fetch Students
 
   useEffect(() => {
@@ -133,7 +128,7 @@ function Dashboard() {
     }
 
     axios
-      .get(`${API}/api/`)
+      .get("http://127.0.0.1:8000/api/")
       .then((response) => {
 
         setStudents(response.data);
@@ -168,7 +163,7 @@ function Dashboard() {
 
       await axios.post(
 
-        `${API}/api/`,
+        "http://127.0.0.1:8000/api/",
 
         formData,
 
@@ -201,41 +196,45 @@ function Dashboard() {
 
   // Edit Student
 
-  const editStudent = async (e) => {
+ // Edit Student
 
-    e.preventDefault();
+const editStudent = async (e) => {
 
-    try {
+  e.preventDefault();
 
-      await axios.put(
+  try {
 
-        `${API}/api/${editId}/`,
+    await axios.patch(
 
-        {
+      `https://django-student-management-system-r6hl.onrender.com/api/${editId}/`,
 
-          name: editName,
+      {
 
-          email: editEmail,
+        name: editName,
 
-          course: editCourse,
+        email: editEmail,
 
-        }
+        course: editCourse,
 
-      );
+      }
 
-      alert("✅ Student Updated Successfully");
+    );
 
-      window.location.reload();
+    alert("✅ Student Updated Successfully");
 
-    } catch (error) {
+    window.location.reload();
 
-      console.log(error);
+  }
 
-      alert("❌ Error Updating Student");
+  catch (error) {
 
-    }
+    console.log(error);
 
-  };
+    alert("❌ Error Updating Student");
+
+  }
+
+};
 
   // Delete Student
 
@@ -245,7 +244,7 @@ function Dashboard() {
 
       await axios.delete(
 
-        `${API}/api/${id}/`
+        `http://127.0.0.1:8000/api/${id}/`
 
       );
 
@@ -272,9 +271,9 @@ function Dashboard() {
 
     try {
 
-      await axios.put(
+      await axios.patch(
 
-        `${API}/api/${id}/`,
+        `http://127.0.0.1:8000/api/${id}/`,
 
         {
 
@@ -383,71 +382,66 @@ function Dashboard() {
       );
 
     }
+else if (
 
-    else if (
+  question.toLowerCase().includes(
+    "hi"
+  )
 
-      question.toLowerCase().includes(
-        "hi"
-      )
+) {
 
-    ) {
+  setAnswer(
 
-      setAnswer(
+    "👋 Hello! How can I help you?"
 
-        "👋 Hello! How can I help you?"
+  );
 
-      );
+}
+else if (
 
-    }
+  question.toLowerCase().includes(
+    "hey"
+  )
 
-    else if (
+) {
 
-      question.toLowerCase().includes(
-        "hey"
-      )
+  setAnswer(
 
-    ) {
+    "👋 Hello! How can I help you?"
 
-      setAnswer(
+  );
 
-        "👋 Hello! How can I help you?"
+}
+else if (
 
-      );
+  question.toLowerCase().includes(
+    "how are you"
+  )
 
-    }
+) {
 
-    else if (
+  setAnswer(
 
-      question.toLowerCase().includes(
-        "how are you"
-      )
+    "I’m doing great, how about you? 🙂"
 
-    ) {
+  );
 
-      setAnswer(
+}
+else if (
 
-        "I’m doing great, how about you? 🙂"
+  question.toLowerCase().includes(
+    "hello"
+  )
 
-      );
+) {
 
-    }
+  setAnswer(
 
-    else if (
+    "👋 Hello! How can I help you?"
 
-      question.toLowerCase().includes(
-        "hello"
-      )
+  );
 
-    ) {
-
-      setAnswer(
-
-        "👋 Hello! How can I help you?"
-
-      );
-
-    }
-
+}
     else {
 
       setAnswer(
@@ -893,7 +887,7 @@ function Dashboard() {
 
               <a
 
-                href={`${API}/export-excel/`}
+                href="http://127.0.0.1:8000/export-excel/"
 
                 className="btn btn-success me-3"
 
@@ -905,7 +899,7 @@ function Dashboard() {
 
               <a
 
-                href={`${API}/export-pdf/`}
+                href="http://127.0.0.1:8000/export-pdf/"
 
                 className="btn btn-danger"
 
@@ -973,7 +967,7 @@ function Dashboard() {
 
                           <img
 
-                            src={`${API}${student.image}`}
+                            src={`http://127.0.0.1:8000${student.image}`}
 
                             alt="student"
 
