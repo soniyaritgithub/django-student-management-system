@@ -199,21 +199,25 @@ def student_api(request, id=None):
 
             student = Student.objects.get(id=id)
 
-            if request.data.get('name'):
+            student.name = request.data.get(
+                'name',
+                student.name
+            )
 
-                student.name = request.data.get('name')
+            student.email = request.data.get(
+                'email',
+                student.email
+            )
 
-            if request.data.get('email'):
+            student.course = request.data.get(
+                'course',
+                student.course
+            )
 
-                student.email = request.data.get('email')
-
-            if request.data.get('course'):
-
-                student.course = request.data.get('course')
-
-            if request.data.get('attendance'):
-
-                student.attendance = request.data.get('attendance')
+            student.attendance = request.data.get(
+                'attendance',
+                student.attendance
+            )
 
             student.save()
 
@@ -224,12 +228,11 @@ def student_api(request, id=None):
 
             })
 
-        except:
+        except Exception as e:
 
             return Response({
 
-                'error':
-                'Student Not Found'
+                'error': str(e)
 
             })
 
