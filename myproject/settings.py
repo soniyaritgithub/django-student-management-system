@@ -165,6 +165,14 @@ LOGIN_REDIRECT_URL = '/'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+CORS_ALLOWED_ORIGINS = [
+
+    "http://localhost:3000",
+
+    "https://django-student-management-system-chi.vercel.app",
+
+]
+
 
 # REST FRAMEWORK + JWT
 
