@@ -1,21 +1,12 @@
 from django.shortcuts import render, redirect
-
 from .models import Student
-
 from .forms import StudentForm
-
 from django.contrib.auth.forms import UserCreationForm
-
 from django.contrib.auth import logout
-
 from rest_framework.decorators import api_view
-
 from rest_framework.response import Response
-
 import pandas as pd
-
 from django.http import HttpResponse
-
 from reportlab.pdfgen import canvas
 
 
@@ -172,13 +163,15 @@ def student_api(request, id=None):
 
     elif request.method == 'POST':
 
+        data = request.data
+
         Student.objects.create(
 
-            name=request.data.get('name'),
+            name=data.get('name'),
 
-            email=request.data.get('email'),
+            email=data.get('email'),
 
-            course=request.data.get('course'),
+            course=data.get('course'),
 
             image=request.FILES.get('image')
 
@@ -186,8 +179,7 @@ def student_api(request, id=None):
 
         return Response({
 
-            'message':
-            'Student Added Successfully'
+            'message': 'Student Added Successfully'
 
         })
 
