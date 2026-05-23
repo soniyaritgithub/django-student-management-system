@@ -55,7 +55,11 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+
+    # CSRF
+
     'django.middleware.csrf.CsrfViewMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -169,7 +173,29 @@ CORS_ALLOWED_ORIGINS = [
 
     "http://localhost:3000",
 
+    "http://127.0.0.1:3000",
+
     "https://django-student-management-system-chi.vercel.app",
+
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'https://django-student-management-system-chi.vercel.app',  
+
+]
+
+
+# CSRF TRUSTED ORIGINS
+
+CSRF_TRUSTED_ORIGINS = [
+     "http://localhost:3001",
+
+   "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    
+     'http://localhost:3000',
+    'http://localhost:8000',
+    'https://django-student-management-system-chi.vercel.app',  # ✅ Vercel frontend
+    'https://django-student-management-system-r6hl.onrender.com', 
 
 ]
 
@@ -185,3 +211,12 @@ REST_FRAMEWORK = {
     ),
 
 }
+ALLOWED_HOSTS = [
+    "django-student-management-system-r6hl.onrender.com",
+    "django-student-management-system-chi.vercel.app",
+    'localhost',
+    '127.0.0.1',
+   
+]
+
+CORS_ALLOW_CREDENTIALS = True
