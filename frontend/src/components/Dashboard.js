@@ -58,7 +58,8 @@ ChartJS.register(
 
 // API URL
 
-const API = "http://127.0.0.1:8000";
+const API =
+"https://django-student-management-system-r6hl.onrender.com";
 
 function Dashboard() {
 
@@ -156,21 +157,11 @@ function Dashboard() {
 
       await axios.post(
 
-        `${API}/api/`,
+  `${API}/api/`,
 
-        formData,
+  formData
 
-        {
-
-          headers: {
-
-            "Content-Type": "multipart/form-data",
-
-          },
-
-        }
-
-      );
+);
 
       alert("✅ Student Added Successfully");
 
