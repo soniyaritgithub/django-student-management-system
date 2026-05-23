@@ -1,5 +1,3 @@
-
-
 import {
 
   FaUserGraduate,
@@ -58,6 +56,9 @@ ChartJS.register(
 
 );
 
+// API URL
+
+const API = "http://127.0.0.1:8000";
 
 function Dashboard() {
 
@@ -71,54 +72,41 @@ function Dashboard() {
 
   // Dark Mode
 
-  const [darkMode, setDarkMode]
-    = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   // Sidebar
 
-  const [sidebarOpen, setSidebarOpen]
-    = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Add Student Form
 
-  const [name, setName]
-    = useState("");
+  const [name, setName] = useState("");
 
-  const [email, setEmail]
-    = useState("");
+  const [email, setEmail] = useState("");
 
-  const [course, setCourse]
-    = useState("");
+  const [course, setCourse] = useState("");
 
-  const [image, setImage]
-    = useState(null);
+  const [image, setImage] = useState(null);
 
   // Search
 
-  const [search, setSearch]
-    = useState("");
+  const [search, setSearch] = useState("");
 
   // AI Assistant States
 
-  const [question, setQuestion]
-    = useState("");
+  const [question, setQuestion] = useState("");
 
-  const [answer, setAnswer]
-    = useState("");
+  const [answer, setAnswer] = useState("");
 
   // Edit Student
 
-  const [editId, setEditId]
-    = useState(null);
+  const [editId, setEditId] = useState(null);
 
-  const [editName, setEditName]
-    = useState("");
+  const [editName, setEditName] = useState("");
 
-  const [editEmail, setEditEmail]
-    = useState("");
+  const [editEmail, setEditEmail] = useState("");
 
-  const [editCourse, setEditCourse]
-    = useState("");
+  const [editCourse, setEditCourse] = useState("");
 
   // Fetch Students
 
@@ -131,7 +119,9 @@ function Dashboard() {
     }
 
     axios
-      .get("http://127.0.0.1:8000/api/")
+
+      .get(`${API}/api/`)
+
       .then((response) => {
 
         setStudents(response.data);
@@ -166,7 +156,7 @@ function Dashboard() {
 
       await axios.post(
 
-        "http://127.0.0.1:8000/api/",
+        `${API}/api/`,
 
         formData,
 
@@ -174,8 +164,7 @@ function Dashboard() {
 
           headers: {
 
-            "Content-Type":
-              "multipart/form-data",
+            "Content-Type": "multipart/form-data",
 
           },
 
@@ -199,65 +188,59 @@ function Dashboard() {
 
   // Edit Student
 
- // Edit Student
+  const editStudent = async (e) => {
 
-// Edit Student
+    e.preventDefault();
 
-const editStudent = async (e) => {
+    try {
 
-  e.preventDefault();
+      const response = await axios.patch(
 
-  try {
+        `${API}/api/${editId}/`,
 
-    const response = await axios.patch(
+        {
 
-      `http://127.0.0.1:8000/api/${editId}/`,
+          name: editName,
 
-      {
+          email: editEmail,
 
-        name: editName,
+          course: editCourse,
 
-        email: editEmail,
+        }
 
-        course: editCourse,
+      );
 
-      }
+      console.log(response.data);
 
-    );
+      const updatedStudents = await axios.get(
 
-    console.log(response.data);
+        `${API}/api/`
 
-    // Refetch latest students
+      );
 
-    const updatedStudents = await axios.get(
-      "http://127.0.0.1:8000/api/"
-    );
+      setStudents(updatedStudents.data);
 
-    setStudents(updatedStudents.data);
+      alert("✅ Student Updated Successfully");
 
-    alert("✅ Student Updated Successfully");
+      setEditId(null);
 
-    // Close Edit Form
+      setEditName("");
 
-    setEditId(null);
+      setEditEmail("");
 
-    setEditName("");
+      setEditCourse("");
 
-    setEditEmail("");
+    }
 
-    setEditCourse("");
+    catch (error) {
 
-  }
+      console.log(error);
 
-  catch (error) {
+      alert("❌ Error Updating Student");
 
-    console.log(error);
+    }
 
-    alert("❌ Error Updating Student");
-
-  }
-
-};
+  };
 
   // Delete Student
 
@@ -267,7 +250,7 @@ const editStudent = async (e) => {
 
       await axios.delete(
 
-        `http://127.0.0.1:8000/api/${id}/`
+        `${API}/api/${id}/`
 
       );
 
@@ -288,15 +271,18 @@ const editStudent = async (e) => {
   // Attendance Function
 
   const markAttendance = async (
+
     id,
+
     status
+
   ) => {
 
     try {
 
       await axios.patch(
 
-        `http://127.0.0.1:8000/api/${id}/`,
+        `${API}/api/${id}/`,
 
         {
 
@@ -345,7 +331,9 @@ const editStudent = async (e) => {
     if (
 
       question.toLowerCase().includes(
+
         "web"
+
       )
 
     ) {
@@ -361,7 +349,9 @@ const editStudent = async (e) => {
     else if (
 
       question.toLowerCase().includes(
+
         "python"
+
       )
 
     ) {
@@ -377,7 +367,9 @@ const editStudent = async (e) => {
     else if (
 
       question.toLowerCase().includes(
+
         "cyber"
+
       )
 
     ) {
@@ -393,7 +385,9 @@ const editStudent = async (e) => {
     else if (
 
       question.toLowerCase().includes(
+
         "react"
+
       )
 
     ) {
@@ -405,66 +399,79 @@ const editStudent = async (e) => {
       );
 
     }
-else if (
 
-  question.toLowerCase().includes(
-    "hi"
-  )
+    else if (
 
-) {
+      question.toLowerCase().includes(
 
-  setAnswer(
+        "hi"
 
-    "👋 Hello! How can I help you?"
+      )
 
-  );
+    ) {
 
-}
-else if (
+      setAnswer(
 
-  question.toLowerCase().includes(
-    "hey"
-  )
+        "👋 Hello! How can I help you?"
 
-) {
+      );
 
-  setAnswer(
+    }
 
-    "👋 Hello! How can I help you?"
+    else if (
 
-  );
+      question.toLowerCase().includes(
 
-}
-else if (
+        "hey"
 
-  question.toLowerCase().includes(
-    "how are you"
-  )
+      )
 
-) {
+    ) {
 
-  setAnswer(
+      setAnswer(
 
-    "I’m doing great, how about you? 🙂"
+        "👋 Hello! How can I help you?"
 
-  );
+      );
 
-}
-else if (
+    }
 
-  question.toLowerCase().includes(
-    "hello"
-  )
+    else if (
 
-) {
+      question.toLowerCase().includes(
 
-  setAnswer(
+        "how are you"
 
-    "👋 Hello! How can I help you?"
+      )
 
-  );
+    ) {
 
-}
+      setAnswer(
+
+        "I’m doing great, how about you? 🙂"
+
+      );
+
+    }
+
+    else if (
+
+      question.toLowerCase().includes(
+
+        "hello"
+
+      )
+
+    ) {
+
+      setAnswer(
+
+        "👋 Hello! How can I help you?"
+
+      );
+
+    }
+
     else {
 
       setAnswer(
@@ -482,7 +489,9 @@ else if (
   const chartData = {
 
     labels: students.map(
+
       (student) => student.name
+
     ),
 
     datasets: [
@@ -492,7 +501,9 @@ else if (
         label: "Students",
 
         data: students.map(
+
           (student, index) => index + 1
+
         ),
 
         backgroundColor: [
@@ -534,12 +545,17 @@ else if (
       <div
 
         className={`bg-dark text-white p-4 ${
+
           sidebarOpen ? "d-block" : "d-none"
+
         }`}
 
         style={{
+
           width: "250px",
+
           minHeight: "100vh",
+
         }}
 
       >
@@ -571,9 +587,13 @@ else if (
           </li>
 
           <li
+
             className="mb-4 text-danger"
+
             style={{ cursor: "pointer" }}
+
             onClick={logout}
+
           >
 
             <FaSignOutAlt /> Logout
@@ -587,11 +607,17 @@ else if (
       {/* Main Content */}
 
       <div
+
         className={
+
           darkMode
+
             ? "bg-dark text-white flex-grow-1 min-vh-100"
+
             : "bg-light flex-grow-1 min-vh-100"
+
         }
+
       >
 
         {/* Navbar */}
@@ -601,10 +627,15 @@ else if (
           <div className="d-flex align-items-center">
 
             <button
+
               className="btn btn-light me-3"
+
               onClick={() =>
+
                 setSidebarOpen(!sidebarOpen)
+
               }
+
             >
 
               <FaBars />
@@ -620,10 +651,15 @@ else if (
           </div>
 
           <button
+
             className="btn btn-warning"
+
             onClick={() =>
+
               setDarkMode(!darkMode)
+
             }
+
           >
 
             <FaMoon />
@@ -702,117 +738,6 @@ else if (
 
           </div>
 
-          {/* Add Student */}
-
-          <div className="card shadow p-4 mb-5">
-
-            <h3 className="mb-4">
-
-              ➕ Add Student
-
-            </h3>
-
-            <form onSubmit={addStudent}>
-
-              <input
-                type="text"
-                className="form-control mb-3"
-                placeholder="Student Name"
-                onChange={(e) =>
-                  setName(e.target.value)
-                }
-              />
-
-              <input
-                type="email"
-                className="form-control mb-3"
-                placeholder="Email"
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
-              />
-
-              <input
-                type="text"
-                className="form-control mb-3"
-                placeholder="Course"
-                onChange={(e) =>
-                  setCourse(e.target.value)
-                }
-              />
-
-              <input
-                type="file"
-                className="form-control mb-3"
-                onChange={(e) =>
-                  setImage(e.target.files[0])
-                }
-              />
-
-              <button
-                type="submit"
-                className="btn btn-success"
-              >
-                Add Student
-              </button>
-
-            </form>
-
-          </div>
-
-          {/* Edit Student */}
-
-          {editId && (
-
-            <div className="card shadow p-4 mb-5">
-
-              <h3 className="mb-4">
-
-                ✏️ Edit Student
-
-              </h3>
-
-              <form onSubmit={editStudent}>
-
-                <input
-                  type="text"
-                  className="form-control mb-3"
-                  value={editName}
-                  onChange={(e) =>
-                    setEditName(e.target.value)
-                  }
-                />
-
-                <input
-                  type="email"
-                  className="form-control mb-3"
-                  value={editEmail}
-                  onChange={(e) =>
-                    setEditEmail(e.target.value)
-                  }
-                />
-
-                <input
-                  type="text"
-                  className="form-control mb-3"
-                  value={editCourse}
-                  onChange={(e) =>
-                    setEditCourse(e.target.value)
-                  }
-                />
-
-                <button
-                  className="btn btn-primary"
-                >
-                  Update Student
-                </button>
-
-              </form>
-
-            </div>
-
-          )}
-
           {/* Search */}
 
           <div className="card shadow p-4 mb-5">
@@ -824,12 +749,19 @@ else if (
             </h4>
 
             <input
+
               type="text"
+
               className="form-control"
+
               placeholder="Search by Name, Email or Course"
+
               onChange={(e) =>
+
                 setSearch(e.target.value)
+
               }
+
             />
 
           </div>
@@ -867,7 +799,9 @@ else if (
               placeholder="Ask something..."
 
               onChange={(e) =>
+
                 setQuestion(e.target.value)
+
               }
 
             />
@@ -886,13 +820,177 @@ else if (
 
             <div className="mt-4">
 
-              <h5>
-
-                {answer}
-
-              </h5>
+              <h5>{answer}</h5>
 
             </div>
+
+          </div>
+
+          {/* Edit Student */}
+
+          {editId && (
+
+            <div className="card shadow p-4 mb-5">
+
+              <h3 className="mb-4">
+
+                ✏️ Edit Student
+
+              </h3>
+
+              <form onSubmit={editStudent}>
+
+                <input
+
+                  type="text"
+
+                  className="form-control mb-3"
+
+                  value={editName}
+
+                  onChange={(e) =>
+
+                    setEditName(e.target.value)
+
+                  }
+
+                />
+
+                <input
+
+                  type="email"
+
+                  className="form-control mb-3"
+
+                  value={editEmail}
+
+                  onChange={(e) =>
+
+                    setEditEmail(e.target.value)
+
+                  }
+
+                />
+
+                <input
+
+                  type="text"
+
+                  className="form-control mb-3"
+
+                  value={editCourse}
+
+                  onChange={(e) =>
+
+                    setEditCourse(e.target.value)
+
+                  }
+
+                />
+
+                <button
+
+                  className="btn btn-primary"
+
+                >
+
+                  Update Student
+
+                </button>
+
+              </form>
+
+            </div>
+
+          )}
+
+          {/* Add Student */}
+
+          <div className="card shadow p-4 mb-5">
+
+            <h3 className="mb-4">
+
+              ➕ Add Student
+
+            </h3>
+
+            <form onSubmit={addStudent}>
+
+              <input
+
+                type="text"
+
+                className="form-control mb-3"
+
+                placeholder="Student Name"
+
+                onChange={(e) =>
+
+                  setName(e.target.value)
+
+                }
+
+              />
+
+              <input
+
+                type="email"
+
+                className="form-control mb-3"
+
+                placeholder="Email"
+
+                onChange={(e) =>
+
+                  setEmail(e.target.value)
+
+                }
+
+              />
+
+              <input
+
+                type="text"
+
+                className="form-control mb-3"
+
+                placeholder="Course"
+
+                onChange={(e) =>
+
+                  setCourse(e.target.value)
+
+                }
+
+              />
+
+              <input
+
+                type="file"
+
+                className="form-control mb-3"
+
+                onChange={(e) =>
+
+                  setImage(e.target.files[0])
+
+                }
+
+              />
+
+              <button
+
+                type="submit"
+
+                className="btn btn-success"
+
+              >
+
+                Add Student
+
+              </button>
+
+            </form>
 
           </div>
 
@@ -910,7 +1008,7 @@ else if (
 
               <a
 
-                href="http://127.0.0.1:8000/export-excel/"
+                href={`${API}/export-excel/`}
 
                 className="btn btn-success me-3"
 
@@ -922,7 +1020,7 @@ else if (
 
               <a
 
-                href="http://127.0.0.1:8000/export-pdf/"
+                href={`${API}/export-pdf/`}
 
                 className="btn btn-danger"
 
@@ -967,15 +1065,21 @@ else if (
                   .filter((student) =>
 
                     student.name
+
                       .toLowerCase()
+
                       .includes(search.toLowerCase()) ||
 
                     student.email
+
                       .toLowerCase()
+
                       .includes(search.toLowerCase()) ||
 
                     student.course
+
                       .toLowerCase()
+
                       .includes(search.toLowerCase())
 
                   )
@@ -990,7 +1094,7 @@ else if (
 
                           <img
 
-                            src={`http://127.0.0.1:8000${student.image}`}
+                            src={`${API}${student.image}`}
 
                             alt="student"
 
@@ -999,7 +1103,9 @@ else if (
                             height="50"
 
                             style={{
+
                               borderRadius: "50%"
+
                             }}
 
                           />
@@ -1016,12 +1122,9 @@ else if (
 
                       <td>{student.course}</td>
 
-                      {/* Attendance Status */}
-
                       <td>
 
-                        {student.attendance ===
-                        "Present" ? (
+                        {student.attendance === "Present" ? (
 
                           <span className="badge bg-success">
 
@@ -1041,8 +1144,6 @@ else if (
 
                       </td>
 
-                      {/* Attendance Buttons */}
-
                       <td>
 
                         <button
@@ -1050,10 +1151,15 @@ else if (
                           className="btn btn-success btn-sm me-2"
 
                           onClick={() =>
+
                             markAttendance(
+
                               student.id,
+
                               "Present"
+
                             )
+
                           }
 
                         >
@@ -1067,10 +1173,15 @@ else if (
                           className="btn btn-danger btn-sm"
 
                           onClick={() =>
+
                             markAttendance(
+
                               student.id,
+
                               "Absent"
+
                             )
+
                           }
 
                         >
@@ -1081,12 +1192,12 @@ else if (
 
                       </td>
 
-                      {/* Actions */}
-
                       <td>
 
                         <button
+
                           className="btn btn-warning btn-sm me-2"
+
                           onClick={() => {
 
                             setEditId(student.id);
@@ -1098,17 +1209,27 @@ else if (
                             setEditCourse(student.course);
 
                           }}
+
                         >
+
                           Edit
+
                         </button>
 
                         <button
+
                           className="btn btn-danger btn-sm"
+
                           onClick={() =>
+
                             deleteStudent(student.id)
+
                           }
+
                         >
+
                           Delete
+
                         </button>
 
                       </td>

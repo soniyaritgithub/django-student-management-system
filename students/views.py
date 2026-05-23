@@ -8,6 +8,15 @@ from rest_framework.response import Response
 import pandas as pd
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import authentication_classes
+from rest_framework.authentication import SessionAuthentication
+from django.http import JsonResponse
+import json
+
 
 
 # HOME PAGE
@@ -326,3 +335,56 @@ def export_pdf(request):
     p.save()
 
     return response
+
+@csrf_exempt
+def signup_api(request):
+
+    if request.method == 'POST':
+
+        try:
+
+            data = json.loads(request.body)
+
+            username = data.get('username')
+
+            email = data.get('email')
+
+            password = data.get('password')
+
+            if User.objects.filter(username=username).exists():
+
+                return JsonResponse({
+
+                    'error': 'Username already exists'
+
+                }, status=400)
+
+            User.objects.create_user(
+
+                username=username,
+
+                email=email,
+
+                password=password
+
+            )
+
+            return JsonResponse({
+
+                'message': 'Account Created Successfully'
+
+            }, status=201)
+
+        except Exception as e:
+
+            return JsonResponse({
+
+                'error': str(e)
+
+            }, status=400)
+
+    return JsonResponse({
+
+        'error': 'Invalid request'
+
+    }, status=405)

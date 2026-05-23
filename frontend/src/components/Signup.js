@@ -2,30 +2,32 @@ import { useState } from "react";
 
 import axios from "axios";
 
-// API URL
-
 const API =
-  "https://django-student-management-system-r6hl.onrender.com";
+"https://django-student-management-system-r6hl.onrender.com";
 
-function Login() {
+function Signup() {
 
   const [username, setUsername] = useState("");
 
+  const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
 
     e.preventDefault();
 
     try {
 
-      const response = await axios.post(
+      await axios.post(
 
-        `${API}/api/token/`,
+        `${API}/signup/`,
 
         {
 
           username,
+
+          email,
 
           password,
 
@@ -33,35 +35,25 @@ function Login() {
 
       );
 
-      // Save JWT Tokens
+      alert("✅ Account Created Successfully");
 
-      localStorage.setItem(
-
-        "access",
-
-        response.data.access
-
-      );
-
-      localStorage.setItem(
-
-        "refresh",
-
-        response.data.refresh
-
-      );
-
-      alert("✅ Login Successful");
-
-      window.location.href = "/dashboard";
+      window.location.href = "/";
 
     }
 
     catch (error) {
 
-      alert("❌ Invalid Username or Password");
+      console.log(error.response);
 
-      console.log(error);
+      alert(
+
+        error.response?.data?.error ||
+
+        JSON.stringify(error.response?.data) ||
+
+        "❌ Error Creating Account"
+
+      );
 
     }
 
@@ -79,11 +71,11 @@ function Login() {
 
             <h2 className="text-center mb-4">
 
-              🔐 JWT Login
+              📝 Create Account
 
             </h2>
 
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleSignup}>
 
               <input
 
@@ -96,6 +88,22 @@ function Login() {
                 onChange={(e) =>
 
                   setUsername(e.target.value)
+
+                }
+
+              />
+
+              <input
+
+                type="email"
+
+                className="form-control mb-3"
+
+                placeholder="Email"
+
+                onChange={(e) =>
+
+                  setEmail(e.target.value)
 
                 }
 
@@ -121,31 +129,23 @@ function Login() {
 
                 type="submit"
 
-                className="btn btn-dark w-100"
+                className="btn btn-success w-100"
 
               >
 
-                Login
+                Create Account
 
               </button>
 
             </form>
 
-            {/* Signup Link */}
-
             <p className="text-center mt-3">
 
-              Don’t have an account?
+              Already have an account?
 
-              <a
+              <a href="/" className="ms-2">
 
-                href="/signup"
-
-                className="ms-2 text-decoration-none"
-
-              >
-
-                Sign Up
+                Login
 
               </a>
 
@@ -163,4 +163,4 @@ function Login() {
 
 }
 
-export default Login;
+export default Signup;
