@@ -6,6 +6,8 @@ import {
 
   Route,
 
+  Navigate,
+
 } from "react-router-dom";
 
 import Login from "./components/Login";
@@ -49,6 +51,16 @@ function App() {
           path="/dashboard"
 
           element={<Dashboard />}
+
+        />
+
+        {/* Invalid Route Redirect */}
+
+        <Route
+
+          path="*"
+
+          element={<Navigate to="/" />}
 
         />
 
