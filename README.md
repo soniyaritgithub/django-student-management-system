@@ -2,6 +2,9 @@
 
 A professional Student Management System built using Django, MySQL, Bootstrap and REST API.
 
+Frontend Live Demo: https://django-student-management-system-chi.vercel.app/
+Backend: https://django-student-management-system-r6hl.onrender.com/
+
 ## Features
 
 - Add Student
